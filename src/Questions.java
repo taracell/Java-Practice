@@ -56,7 +56,7 @@ public class Questions {
         System.out.println("Solve for Coin Change: first enter in 2 numbers, the first to signify the total amount your coins will add to, second how many coins will you have:");
         int num7 = getUserInputNumber();
         int num8 = getUserInputNumber();
-        System.out.println(Solution.count(getUserInputArray(num8), num7, num8));
+        System.out.println("The number of ways change can be given back from the input array is: "+Solution.count(getUserInputArray(num8), num7));
     }
     private static int getUserInputNumber(){
         Scanner input = new Scanner(System.in);
@@ -254,25 +254,31 @@ class Solution{
         return stack.pop();
     }
 
-    public static long count(int[] coinValueArray, int numberOfCoins, int coinArraySum)
-    {
-        long count = 0;
-        //Loop through coin value array;
-        for (int valueOfCoin : coinValueArray) {
-            //create change array if % == 0
-            if (coinArraySum % valueOfCoin == 0) {
-                int[] arrayOfChange = new int[coinArraySum / valueOfCoin];
-                for (int j = 0; j < coinArraySum / valueOfCoin; j++) {
-                    arrayOfChange[j] = valueOfCoin;
+    public static long count(int[] coinValueArray, int coinArraySum) {
+        // Create the ways array to 1 plus the amount
+        // to stop overflow
+        long[] ways = new long[coinArraySum + 1];
+
+        // Set the first way to 1 because its 0 and
+        // there is 1 way to make 0 with 0 coins
+        ways[0] = 1;
+
+        // Go through all of the coins
+        for (int i = 0; i < coinValueArray.length; i++) {
+
+            // Make a comparison to each index value
+            // of ways with the coin value.
+            for (int j = 0; j < ways.length; j++) {
+                if (coinValueArray[i] <= j) {
+
+                    // Update the ways array
+                    ways[j] += ways[j - coinValueArray[i]];
                 }
-                System.out.println(Arrays.toString(arrayOfChange));
-                count++;
-             //create change array if sum -  coin this
-            } else if (coinArraySum - ){
-
             }
-
         }
-        return count;
+
+        // return the value at the Nth position
+        // of the ways array.
+        return ways[coinArraySum];
     }
 }
