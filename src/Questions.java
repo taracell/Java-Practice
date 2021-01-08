@@ -50,13 +50,20 @@ public class Questions {
         System.out.println("Solve a postfix equation");
         System.out.println("Postfix Eval (enter in something like 231*+9- which evaluates to -4 or 123+*8- which evaluate" +
                 "s to -3: "+Solution.evaluatePostFix(getUserInputString()));
-        */
 
+*/
         //Question 8: Solve for Coin change given a value N, find the number of ways to make change for N cents, if we have infinite supply of each of S = { S1, S2, .. , SM } valued coins.
         System.out.println("Solve for Coin Change: first enter in 2 numbers, the first to signify the total amount your coins will add to, second how many coins will you have:");
         int num7 = getUserInputNumber();
         int num8 = getUserInputNumber();
         System.out.println("The number of ways change can be given back from the input array is: "+Solution.count(getUserInputArray(num8), num7));
+
+
+        //Question 9: Modify array by replacing every array element with minimum possible value of arr[j] + |j – i|
+        System.out.println("Given an array arr[] of size N, the task is to find a value for each index such that the value at index i is arr[j] + |j – i| where 1 ≤ j ≤ N, the task is to find the minimum value for each index from 1 to N.");
+        System.out.println("Enter in the desired length of an array:");
+        int num9 = getUserInputNumber();
+        System.out.println("The resulting array is: " + Arrays.toString(Solution.getMinimumValue(getUserInputArray(num9), num9)));
     }
     private static int getUserInputNumber(){
         Scanner input = new Scanner(System.in);
@@ -215,11 +222,11 @@ class Duplicate{
 }
 
 class Solution{
-    public static int evaluatePostFix(String S){
+    public static int evaluatePostFix(String string){
         Stack<Integer> stack = new Stack<Integer>();
         int result;
-        for(int i = 0; i < S.length(); i++) {
-            char character = S.charAt(i);
+        for(int i = 0; i < string.length(); i++) {
+            char character = string.charAt(i);
             //if the character at this index is a digit store as an it
             if(Character.isDigit(character)){
                 stack.push(Integer.parseInt(String.valueOf(character)));
@@ -280,5 +287,36 @@ class Solution{
         // return the value at the Nth position
         // of the ways array.
         return ways[coinArraySum];
+    }
+
+    public static int[] getMinimumValue(int[] array,  int num) {
+        //use prefix sum technique
+        //array to store values from 0 - num
+        int [] temp1 = new int[num];
+        temp1[0]=array[0];
+
+
+        //array to store values from num - 0
+        int [] temp2 = new int[num];
+        temp2[num - 1] = array[num-1];
+
+        //Traverse the array arr[] from i = 2 to num-1 and calculate min(arr[i], temp1[i-1] + 1).
+        for(int i = 1; i < num; i++){
+            temp1[i] = Math.min(array[i], temp1[i - 1] + 1);
+        }
+        System.out.println("temp1: "+Arrays.toString(temp1));
+
+        //Traverse the array arr[] from i = num-1 to 1 and calculate min(arr[i], temp2[i+1] + 1).
+        for (int i = num-2; i >= 0; i--){
+            temp2[i] = Math.min(array[i], temp2[i + 1] + 1);
+        }
+        System.out.println("temp2: "+Arrays.toString(temp2));
+
+        //Again traverse the array from 1 to N and print min(temp1[i], temp2[i]) at each iteration.
+        int [] array1 = new int[num];
+        for (int i = 0; i < num; i++){
+            array1[i] = Math.min(temp1[i], temp2[i]);
+        }
+        return array1;
     }
 }
